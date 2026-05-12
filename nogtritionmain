@@ -10,7 +10,10 @@
 <meta name="application-name" content="NOGTRITION">
 <meta name="description" content="NOGTRITION — Bodybuilder nutrition & workout tracking app">
 <meta id="theme-color-meta" name="theme-color" content="#000000">
-<link rel="manifest" id="pwa-manifest" href="data:application/json,{}">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+<link rel="manifest" id="pwa-manifest" href="data:application/json,{}">`
 <title>NOGTRITION</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -42,7 +45,49 @@
     --stripe-display: block;
   }
 
-  /* Vertical stripes — positioned on the #app container, visible through all tabs */
+  [data-theme="pf"] {
+    --bg: #1a0033; --surface: #220040; --surface2: #2d0055; --border: #4a1a7a;
+    --accent: #ffe000; --accent-rgb: 255,224,0; --accent2: #ff4747;
+    --text: #ffffff; --muted: #9b7ab8; --blue: #c39eff; --orange: #ffe87a;
+    --radius: 14px; --tab-h: 72px; --header-h: 58px;
+    --safe-bottom: env(safe-area-inset-bottom,0px); --safe-top: env(safe-area-inset-top,0px);
+    --stripe-display: none;
+  }
+
+  /* Planet Fitness — yellow accent overrides for hardcoded colors */
+  [data-theme="pf"] .sub-tab.active { background: #ffe000; color: #1a0033; }
+  [data-theme="pf"] .btn-primary { background: #ffe000; color: #1a0033; }
+  [data-theme="pf"] .chip.active { background: #ffe000; color: #1a0033; border-color: #ffe000; }
+  [data-theme="pf"] .theme-swatch.active { border-color: #ffe000; }
+  [data-theme="pf"] .tab.active { color: #ffe000; }
+  [data-theme="pf"] .set-done { color: #ffe000; }
+  [data-theme="pf"] .food-cals { color: #ffe000; }
+  [data-theme="pf"] .cal-remaining { color: #ffe000; }
+  [data-theme="pf"] #header h1 span:first-child { color: #ffe000; }
+  [data-theme="pf"] .stat-val { color: #ffe000; }
+  [data-theme="pf"] #nut-protein-val,
+  [data-theme="pf"] #nut-carbs-val,
+  [data-theme="pf"] #nut-fat-val { color: #ffe000 !important; }
+  [data-theme="pf"] #nut-bar-protein,
+  [data-theme="pf"] #nut-bar-carbs,
+  [data-theme="pf"] #nut-bar-fat { background: #ffe000 !important; }
+  [data-theme="pf"] #cal-ring { stroke: #ffe000 !important; }
+  [data-theme="pf"] #timer-arc { stroke: #ffe000 !important; }
+  [data-theme="pf"] .macro-fill { background: #ffe000 !important; }
+  [data-theme="pf"] .macro-bar { background: #3d1060; }
+  [data-theme="pf"] .exercise-name { color: #ffffff; }
+  [data-theme="pf"] input:focus,
+  [data-theme="pf"] select:focus { border-color: #ffe000; }
+  [data-theme="pf"] .toggle input:checked + .toggle-slider { background: #ffe000; border-color: #ffe000; }
+  [data-theme="pf"] .toggle-slider:before { background: #1a0033; }
+  [data-theme="pf"] #steps-bar { background: #ffe000 !important; }
+  [data-theme="pf"] #water-bar { background: #ffe000 !important; }
+  [data-theme="pf"] #caffeine-bar { background: #c39eff !important; }
+  [data-theme="pf"] #prewkt-progress-bar { background: #ffe000 !important; }
+  [data-theme="pf"] #streak-fill { background: #ffe000 !important; }
+  [data-theme="pf"] a { color: #ffe000; }
+
+
   #app::before {
     content: '';
     display: var(--stripe-display, none);
@@ -85,6 +130,7 @@
   [data-theme="stripe"] .weight-val { color: #cccccc; }
   [data-theme="stripe"] .cal-remaining { color: #ffffff; }
   [data-theme="stripe"] #header h1 { color: #ffffff; }
+  [data-theme="stripe"] #header h1 span:first-child { color: #ffffff; }
   [data-theme="stripe"] .stat-val { color: #ffffff; }
   [data-theme="stripe"] #nut-protein-val,
   [data-theme="stripe"] #nut-carbs-val,
@@ -109,6 +155,26 @@
   [data-theme="stripe"] .meal-kcal { color: #aaaaaa; }
   [data-theme="stripe"] a { color: #ffffff; }
   [data-theme="stripe"] .card-title { color: #888888; }
+
+  /* ── STREAK BAR ───────────────────────────────── */
+  #streak-bar {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px;
+  }
+  #streak-track {
+    flex: 1; height: 6px; background: var(--surface2);
+    border-radius: 99px; overflow: hidden;
+  }
+  #streak-fill {
+    height: 100%; width: 0%;
+    background: var(--accent);
+    border-radius: 99px;
+    transition: width 0.5s ease;
+  }
+  #streak-label {
+    font-size: 12px; color: var(--muted);
+    white-space: nowrap; flex-shrink: 0;
+  }
 
   /* ── RESET ────────────────────────────────────── */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -280,13 +346,18 @@
 
 <div id="app">
   <div id="header">
-    <h1>NOGTRITION</h1>
+    <h1><span style="color:var(--accent)">NOG</span><span style="color:#ffffff">TRITION</span> <span style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;color:var(--accent);background:rgba(var(--accent-rgb),0.12);border:1px solid rgba(var(--accent-rgb),0.25);border-radius:6px;padding:2px 7px;vertical-align:middle;text-transform:uppercase">Alpha</span></h1>
     <span class="date" id="header-date"></span>
     <button class="sync-btn" onclick="syncToSheets()">Sync</button>
   </div>
 
   <div id="pages">
 <div class="page active" id="page-dashboard">
+      <div id="streak-bar">
+        <div id="streak-track"><div id="streak-fill"></div></div>
+        <div id="streak-label">0 days 🔥</div>
+      </div>
+
       <div class="section-title">Today's Overview</div>
 
       <div class="calorie-ring-wrap">
@@ -493,7 +564,10 @@
         </div>
 
         <div class="card" id="meals-card">
-          <div class="card-title" id="nut-log-title">Food Log</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <div class="card-title" id="nut-log-title" style="margin:0">Food Log</div>
+            <button class="btn btn-secondary btn-sm" onclick="openSaveTemplateModal()">Save as Template</button>
+          </div>
           <div id="food-log-list">
             <div style="color:var(--muted);font-size:14px;padding:8px 0">No foods logged yet.</div>
           </div>
@@ -619,6 +693,16 @@
           <div class="card-title" style="margin-bottom:10px">My Recipes</div>
           <div id="recipe-list">
             <div style="color:var(--muted);font-size:14px;padding:8px 0">No recipes yet. Tap + New Recipe to build one.</div>
+          </div>
+        </div>
+
+        <div id="templates-section">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <div class="card-title" style="margin:0">Meal Templates</div>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5">Save today's food log as a named template and log it again on any day in one tap.</div>
+          <div id="template-list">
+            <div style="color:var(--muted);font-size:14px;padding:8px 0">No templates yet. Go to Nutrition and tap Save as Template.</div>
           </div>
         </div>
       </div>
@@ -1146,7 +1230,11 @@
             <div class="theme-dot" style="background:#000;border:2px solid #333;position:relative;overflow:hidden">
               <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,rgba(255,255,255,0.5) 30%,rgba(255,255,255,0.5) 45%,transparent 45%,transparent 55%,rgba(255,255,255,0.5) 55%,rgba(255,255,255,0.5) 70%,transparent 70%)"></div>
             </div>
-            Black & White
+            NogOnTop
+          </div>
+          <div class="theme-swatch" id="swatch-pf" onclick="setTheme('pf',this)">
+            <div class="theme-dot" style="background:linear-gradient(135deg,#ffe000,#7500c0)"></div>
+            Planet Fitness
           </div>
         </div>
       </div>
@@ -1186,6 +1274,9 @@
       </div>
 <div class="card">
         <div class="card-title">Data</div>
+        <div id="data-backup-nudge" style="display:none;background:rgba(255,71,71,0.08);border:1px solid rgba(255,71,71,0.2);border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:12px;color:#ff6b6b;line-height:1.5">
+          Your data is only saved on this device. Export a backup regularly so you never lose your progress.
+        </div>
         <div class="setting-row">
           <div>
             <div class="setting-label">Storage Used</div>
@@ -1235,15 +1326,45 @@
           </button>
         </div>
       </div>
+<div class="card" id="feedback-card">
+        <div class="card-title">Feedback</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.5">Request features or report bugs. Takes less than a minute.</div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px">
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface2);border-radius:10px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <div style="font-size:13px;color:var(--text)">Feature Requests</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface2);border-radius:10px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M9 9a3 3 0 1 1 6 0c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <div style="font-size:13px;color:var(--text)">Bug Reports</div>
+          </div>
+        </div>
+        <a href="FEEDBACK_FORM_URL_HERE" target="_blank" rel="noopener" style="text-decoration:none;display:block" id="feedback-form-link">
+          <button class="btn btn-primary" type="button" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Give Feedback
+          </button>
+        </a>
+        <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:8px">Responses go to a private Google Sheet</div>
+      </div>
 <div class="card">
         <div class="card-title">About</div>
         <div class="setting-row">
-          <div><div class="setting-label">NOGTRITION</div><div class="setting-sub">v2.0</div></div>
+          <div><div class="setting-label">NOGTRITION</div><div class="setting-sub">v3.0</div></div>
           <div style="font-size:12px;color:var(--muted)">Bodybuilder Tracker</div>
         </div>
         <div class="setting-row">
           <div class="setting-label">Install on iPhone</div>
           <div style="font-size:12px;color:var(--muted)">Share → Add to Home Screen</div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-label">Share App</div>
+          <button class="btn btn-secondary btn-sm" onclick="(function(){if(navigator.share){navigator.share({title:'NOGTRITION',text:'Bodybuilder nutrition & workout tracker',url:location.href});}else{navigator.clipboard&&navigator.clipboard.writeText(location.href).then(()=>showToast('Link copied.','success'));}})()">Share</button>
+        </div>
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+          <div style="font-size:11px;color:var(--muted);line-height:1.7">
+            Food data provided by <a href="https://world.openfoodfacts.org" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none">Open Food Facts</a>, a free, open, collaborative food products database under the <a href="https://opendatacommons.org/licenses/odbl/1.0/" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none">Open Database License</a>.
+          </div>
         </div>
       </div>
     </div>
@@ -1404,6 +1525,13 @@
       <option>Biceps</option><option>Triceps</option><option>Legs</option>
       <option>Glutes</option><option>Core</option><option>Cardio</option>
     </select>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding:12px;background:var(--surface2);border-radius:10px">
+      <div>
+        <div style="font-size:14px;font-weight:500">Superset</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">Pair with the exercise above it</div>
+      </div>
+      <label class="toggle"><input type="checkbox" id="ex-superset"><span class="toggle-slider"></span></label>
+    </div>
     <div style="height:12px"></div>
     <button class="btn btn-primary" onclick="addExercise()">Add Exercise</button>
   </div>
@@ -1471,6 +1599,17 @@
     <div id="scan-status" style="text-align:center;font-size:13px;color:var(--muted);margin-top:12px">Point camera at barcode...</div>
     <div style="height:12px"></div>
     <button class="btn btn-secondary" onclick="stopScanner()">Cancel</button>
+  </div>
+</div>
+<div class="modal-overlay" id="save-template-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('save-template-modal')">✕</button>
+    <div class="modal-title">Save as Template</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.5">Save today's food log as a reusable template. Log it on any day in one tap.</div>
+    <label>Template Name</label>
+    <input type="text" id="template-name-input" placeholder="e.g. Cut Day, Refeed, High Protein">
+    <div style="height:12px"></div>
+    <button class="btn btn-primary" onclick="saveAsTemplate()">Save Template</button>
   </div>
 </div>
 <div class="modal-overlay" id="new-recipe-modal">
@@ -1605,7 +1744,8 @@ if (!state.weightLog)  state.weightLog  = [];
 if (!state.sheets)     state.sheets     = { id:'', key:'' };
 if (!state.recipes)    state.recipes    = [];
 if (!state.savedFoods) state.savedFoods = [];
-if (!state.splits)     state.splits     = [];
+if (!state.splits)         state.splits         = [];
+if (!state.mealTemplates)  state.mealTemplates  = [];
 if (!state.drinkLog)    state.drinkLog    = {};
 if (!state.drinkGoals)  state.drinkGoals  = { water:64, caffeine:400 };
 if (!state.prewktFoods) state.prewktFoods = {};
@@ -2006,6 +2146,109 @@ function refreshNutrition() {
   const summCard = document.getElementById('prewkt-summary-card');
   if (summCard) summCard.style.display = ((state.prewktFoods?.[selectedNutDate]||[]).length > 0 || prewktActive) ? 'block' : 'none';
 }
+function openSaveTemplateModal() {
+  const foods = state.foodLog[selectedNutDate] || [];
+  if (!foods.length) { showToast('No foods logged to save as template', 'error'); return; }
+  document.getElementById('template-name-input').value = '';
+  openModal('save-template-modal');
+}
+
+function saveAsTemplate() {
+  const name = document.getElementById('template-name-input').value.trim();
+  if (!name) { showToast('Enter a template name', 'error'); return; }
+  const foods = (state.foodLog[selectedNutDate] || []).map(f => ({...f}));
+  if (!foods.length) { showToast('No foods logged today', 'error'); return; }
+  const totalCal = foods.reduce((s,f) => s + (f.cal||0), 0);
+  state.mealTemplates.push({ id: Date.now(), name, foods, totalCal, savedAt: selectedNutDate });
+  saveState();
+  closeModal('save-template-modal');
+  showToast('Template saved.', 'success');
+  renderTemplateList();
+}
+
+function renderTemplateList() {
+  const el = document.getElementById('template-list');
+  if (!el) return;
+  if (!state.mealTemplates || !state.mealTemplates.length) {
+    el.innerHTML = '<div style="color:var(--muted);font-size:14px;padding:8px 0">No templates yet. Go to Nutrition and tap Save as Template.</div>';
+    return;
+  }
+  el.innerHTML = state.mealTemplates.map(t => `
+    <div class="card" style="margin-bottom:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:15px;font-weight:500">${t.name}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">${t.foods.length} items &middot; ${Math.round(t.totalCal)} kcal</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0">
+          <button class="btn btn-primary btn-sm" onclick="logTemplate(${t.id})">Log</button>
+          <button class="del-btn" onclick="deleteTemplate(${t.id})">&times;</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function logTemplate(id) {
+  const t = state.mealTemplates.find(t => t.id === id);
+  if (!t) return;
+  const d = selectedNutDate || today();
+  if (!state.foodLog[d]) state.foodLog[d] = [];
+  t.foods.forEach(f => state.foodLog[d].push({...f, id: Date.now() + Math.random(), time: new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}));
+  saveState();
+  buildDayStrip();
+  refreshNutrition();
+  refreshDashboard();
+  showToast(t.name + ' logged.', 'success');
+}
+
+function deleteTemplate(id) {
+  state.mealTemplates = state.mealTemplates.filter(t => t.id !== id);
+  saveState();
+  renderTemplateList();
+  showToast('Template removed.');
+}
+
+function calcStreak() {
+  // A day "counts" if the user logged any food OR any workout
+  const hasActivity = (dateStr) => {
+    const hasFoods = (state.foodLog[dateStr] || []).length > 0;
+    const hasWorkout = state.workoutLog[dateStr] && (state.workoutLog[dateStr].exercises || []).length > 0;
+    return hasFoods || hasWorkout;
+  };
+  const todayStr = today();
+  let streak = 0;
+  let d = new Date(todayStr + 'T12:00:00');
+  // If today has activity, count today; otherwise start checking from yesterday
+  if (hasActivity(todayStr)) {
+    streak = 1;
+    d.setDate(d.getDate() - 1);
+    while (true) {
+      const ds = d.toISOString().slice(0,10);
+      if (!hasActivity(ds)) break;
+      streak++;
+      d.setDate(d.getDate() - 1);
+    }
+  } else {
+    d.setDate(d.getDate() - 1);
+    while (true) {
+      const ds = d.toISOString().slice(0,10);
+      if (!hasActivity(ds)) break;
+      streak++;
+      d.setDate(d.getDate() - 1);
+    }
+  }
+  return streak;
+}
+
+function refreshStreakBar() {
+  const streak = calcStreak();
+  const emoji = streak >= 30 ? '🔥🔥🔥' : streak >= 14 ? '🔥🔥' : streak >= 1 ? '🔥' : '💤';
+  const pct = Math.min(100, (streak / 30) * 100);
+  document.getElementById('streak-fill').style.width = pct + '%';
+  document.getElementById('streak-label').textContent = streak + ' day' + (streak !== 1 ? 's' : '') + ' ' + emoji;
+}
+
 function refreshDashboard() {
   const t = getTodayTotals();
   const g = state.goals;
@@ -2040,6 +2283,7 @@ function refreshDashboard() {
   }
 
   drawMiniWeightChart();
+  refreshStreakBar();
 }
 // Data model:
 //   state.splits = [{ id, name, desc, workouts: [{ id, name, focus, exercises:[{name,muscle,targetSets,targetReps}] }] }]
@@ -2292,10 +2536,12 @@ function refreshWorkout() {
   document.getElementById('exercise-list').innerHTML=w.exercises.map((ex,ei)=>{
     const sets=ex.sets||[];
     const best=getPrevBest(ex.name);
-    return `<div class="exercise-card">
+    const isSuperset = ex.superset && ei > 0;
+    const supersetConnector = isSuperset ? `<div style="display:flex;align-items:center;gap:8px;margin:-4px 0;padding:0 12px"><div style="width:2px;height:16px;background:var(--accent);border-radius:1px;margin-left:10px"></div><div style="font-size:10px;color:var(--accent);font-weight:600;letter-spacing:0.5px;text-transform:uppercase">Superset</div></div>` : '';
+    return `${supersetConnector}<div class="exercise-card"${isSuperset ? ` style="border-color:rgba(var(--accent-rgb),0.35)"` : ''}>
       <div class="exercise-header">
         <div style="flex:1;min-width:0">
-          <div class="exercise-name">${ex.name}</div>
+          <div class="exercise-name">${ex.name}${isSuperset ? `<span style="font-size:10px;font-weight:600;color:var(--accent);background:rgba(var(--accent-rgb),0.12);padding:2px 7px;border-radius:5px;margin-left:8px;letter-spacing:0.5px">SS</span>` : ''}</div>
           <div class="exercise-sets">
             <span style="color:var(--muted)">${ex.muscle}</span>
             ${ex.targetSets?`<span style="color:var(--muted)"> \u00b7 target ${ex.targetSets}\u00d7${ex.targetReps}</span>`:''}
@@ -2347,8 +2593,10 @@ function addExercise(){
   const name=document.getElementById('ex-name').value.trim();
   if(!name){showToast('Enter exercise name','error');return;}
   const w=getOrCreateTodayWorkout();
-  w.exercises.push({name,muscle:document.getElementById('ex-muscle').value,sets:[]});
+  const isSuperset = document.getElementById('ex-superset').checked;
+  w.exercises.push({name,muscle:document.getElementById('ex-muscle').value,sets:[],superset:isSuperset});
   saveState(); document.getElementById('ex-name').value='';
+  document.getElementById('ex-superset').checked = false;
   closeModal('add-exercise-modal'); refreshWorkout();
   showToast('Exercise added.','success');
 }
@@ -2634,6 +2882,13 @@ function loadSettings() {
   applyTheme(state.theme || 'blue');
   updateStorageDisplay();
   updateAccountUI();
+  // Show backup nudge for guest users or users without sheets connected
+  const nudge = document.getElementById('data-backup-nudge');
+  if (nudge) {
+    const isGuest = !gUser;
+    const noSheets = !state.sheets.id;
+    nudge.style.display = (isGuest || noSheets) ? 'block' : 'none';
+  }
 }
 
 function saveGoals() {
@@ -2666,7 +2921,7 @@ function clearData() {
 function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
   state.theme = theme;
-  const colors = { blue: '#000000', pink: '#000000', stripe: '#000000' };
+  const colors = { blue: '#000000', pink: '#000000', stripe: '#000000', pf: '#1a0033' };
   document.getElementById('theme-color-meta').content = colors[theme] || '#000000';
   document.querySelectorAll('.theme-swatch').forEach(s => s.classList.remove('active'));
   const sw = document.getElementById('swatch-' + theme);
@@ -2676,7 +2931,7 @@ function applyTheme(theme) {
 function setTheme(theme, el) {
   applyTheme(theme);
   saveState();
-  const labels = { blue:'Blue theme applied.', pink:'Pink theme applied.', stripe:'Black & White theme applied.' };
+  const labels = { blue:'Blue theme applied.', pink:'Pink theme applied.', stripe:'NogOnTop theme applied.', pf:'Planet Fitness theme applied.' };
   showToast(labels[theme] || 'Theme applied.', 'success');
 }
 const TEMPLATE_URL = 'https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms/copy';
@@ -2765,13 +3020,37 @@ async function syncToSheets() {
     { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({values}) }
   );
   try {
-    const foodRows = [['Date','Day','Meal','Food Name','Calories','Protein (g)','Carbs (g)','Fat (g)','Fiber (g)','Sugar (g)','Sodium (mg)','Potassium (mg)','Calcium (mg)','Iron (mg)','Vitamin C (mg)','Vitamin D (IU)','Cholesterol (mg)','Sat Fat (g)','Time']];
-    Object.entries(state.foodLog).sort().forEach(([date, foods]) => {
+    // ── 1. FOOD LOG ───────────────────────────────────────────────────────────
+    const foodRows = [['Date','Day','Meal','Food Name','Calories','Protein (g)','Carbs (g)','Fat (g)',
+      'Fiber (g)','Sugar (g)','Sodium (mg)','Potassium (mg)','Calcium (mg)','Iron (mg)',
+      'Vitamin C (mg)','Vitamin D (IU)','Cholesterol (mg)','Sat Fat (g)',
+      'Carb Type','Pre-Workout','Time']];
+    Object.entries(state.foodLog||{}).sort().forEach(([date, foods]) => {
       const day = new Date(date+'T12:00:00').toLocaleDateString('en-US',{weekday:'long'});
-      (foods||[]).forEach(f => foodRows.push([date,day,f.meal||'',f.name,f.cal||0,f.protein||0,f.carbs||0,f.fat||0,f.fiber||0,f.sugar||0,f.sodium||0,f.potassium||0,f.calcium||0,f.iron||0,f.vitc||0,f.vitd||0,f.chol||0,f.satfat||0,f.time||'']));
+      (foods||[]).forEach(f => foodRows.push([
+        date, day, f.meal||'', f.name,
+        f.cal||0, f.protein||0, f.carbs||0, f.fat||0,
+        f.fiber||0, f.sugar||0, f.sodium||0, f.potassium||0,
+        f.calcium||0, f.iron||0, f.vitc||0, f.vitd||0, f.chol||0, f.satfat||0,
+        f.carbType||'mixed', f.isPreWorkout ? 'Yes' : 'No', f.time||''
+      ]));
     });
     await put('Food Log', foodRows);
 
+    // ── 2. PRE-WORKOUT NUTRITION ──────────────────────────────────────────────
+    const prewktRows = [['Date','Day','Food Name','Calories','Protein (g)','Carbs (g)','Fat (g)',
+      'Fiber (g)','Sugar (g)','Carb Type','Time']];
+    Object.entries(state.prewktFoods||{}).sort().forEach(([date, foods]) => {
+      const day = new Date(date+'T12:00:00').toLocaleDateString('en-US',{weekday:'long'});
+      (foods||[]).forEach(f => prewktRows.push([
+        date, day, f.name,
+        f.cal||0, f.protein||0, f.carbs||0, f.fat||0,
+        f.fiber||0, f.sugar||0, f.carbType||'mixed', f.time||''
+      ]));
+    });
+    await put('Pre-Workout Nutrition', prewktRows);
+
+    // ── 3. DRINK LOG ──────────────────────────────────────────────────────────
     const drinkRows = [['Date','Day','Type','Label','Amount','Unit','Time']];
     Object.entries(state.drinkLog||{}).sort().forEach(([date, drinks]) => {
       const day = new Date(date+'T12:00:00').toLocaleDateString('en-US',{weekday:'long'});
@@ -2779,37 +3058,56 @@ async function syncToSheets() {
     });
     await put('Drink Log', drinkRows);
 
+    // ── 4. NUTRITION GOALS ────────────────────────────────────────────────────
     const g = state.goals||{};
-    await put('Nutrition Goals', [['Date Updated','Calorie Goal','Protein (g)','Carbs (g)','Fat (g)'],[today(),g.calories||0,g.protein||0,g.carbs||0,g.fat||0]]);
+    const dg = state.drinkGoals||{};
+    await put('Nutrition Goals', [
+      ['Date Updated','Calorie Goal','Protein (g)','Carbs (g)','Fat (g)','Water Goal (oz)','Caffeine Limit (mg)'],
+      [today(), g.calories||0, g.protein||0, g.carbs||0, g.fat||0, dg.water||64, dg.caffeine||400]
+    ]);
 
-    const wktRows = [['Date','Day','Split','Workout','Exercise','Muscle Group','Set #','Set Type','Weight (lbs)','Reps','Volume','RIR','Assisted Reps','Drop Weight (lbs)','Drop Reps','Notes','Time']];
-    Object.entries(state.workoutLog).sort().forEach(([date, w]) => {
+    // ── 5. WORKOUT LOG ────────────────────────────────────────────────────────
+    const wktRows = [['Date','Day','Split','Workout','Exercise','Muscle Group','Superset',
+      'Set #','Set Type','Weight (lbs)','Reps','Volume (lbs)','RIR',
+      'Assisted Reps','Drop Weight (lbs)','Drop Reps','Notes','Time']];
+    Object.entries(state.workoutLog||{}).sort().forEach(([date, w]) => {
       const day = new Date(date+'T12:00:00').toLocaleDateString('en-US',{weekday:'long'});
-      (w.exercises||[]).forEach(ex => {
-        (ex.sets||[]).forEach((s,si) => {
-          wktRows.push([date,day,w.splitName||'',w.name||'',ex.name,ex.muscle||'',si+1,s.type||'Working Set',s.weight||0,s.reps||0,(s.weight||0)*(s.reps||0),s.rir!=null?s.rir:'',s.assistedReps||'',s.dropWeight||'',s.dropReps||'',s.notes||'',s.time||'']);
+      (w.exercises||[]).forEach((ex, ei) => {
+        (ex.sets||[]).forEach((s, si) => {
+          wktRows.push([
+            date, day, w.splitName||'', w.name||'',
+            ex.name, ex.muscle||'', ex.superset ? 'Yes' : 'No',
+            si+1, s.type||'Working Set',
+            s.weight||0, s.reps||0, (s.weight||0)*(s.reps||0),
+            s.rir!=null?s.rir:'', s.assistedReps||'',
+            s.dropWeight||'', s.dropReps||'', s.notes||'', s.time||''
+          ]);
         });
       });
     });
     await put('Workout Log', wktRows);
 
-    const splitRows = [['Split Name','Split Description','Workout Name','Workout Focus','Exercise','Muscle Group','Target Sets','Target Reps']];
+    // ── 6. SPLITS ─────────────────────────────────────────────────────────────
+    const splitRows = [['Split Name','Split Description','Workout Name','Workout Focus',
+      'Exercise','Muscle Group','Target Sets','Target Reps','Superset']];
     (state.splits||[]).forEach(s => {
-      if (!(s.workouts||[]).length) { splitRows.push([s.name,s.desc||'','','','','','','']); return; }
+      if (!(s.workouts||[]).length) { splitRows.push([s.name,s.desc||'','','','','','','','']); return; }
       s.workouts.forEach(w => {
-        if (!(w.exercises||[]).length) { splitRows.push([s.name,s.desc||'',w.name,w.focus||'','','','','']); return; }
-        w.exercises.forEach(ex => splitRows.push([s.name,s.desc||'',w.name,w.focus||'',ex.name,ex.muscle||'',ex.targetSets||'',ex.targetReps||'']));
+        if (!(w.exercises||[]).length) { splitRows.push([s.name,s.desc||'',w.name,w.focus||'','','','','','']); return; }
+        w.exercises.forEach(ex => splitRows.push([s.name,s.desc||'',w.name,w.focus||'',ex.name,ex.muscle||'',ex.targetSets||'',ex.targetReps||'',ex.superset?'Yes':'No']));
       });
     });
     await put('Splits', splitRows);
 
-    const cardioRows = [['Date','Day','Activity','Intensity','Duration (min)','Est. Calories','Laps','Time of Day']];
+    // ── 7. CARDIO LOG ─────────────────────────────────────────────────────────
+    const cardioRows = [['Date','Day','Activity','Intensity','Duration (min)','Duration (sec)','Est. Calories','Laps','Time of Day']];
     (state.cardioLog||[]).forEach(e => {
       const day = new Date(e.date+'T12:00:00').toLocaleDateString('en-US',{weekday:'long'});
-      cardioRows.push([e.date,day,e.type||'',e.intensity||'',e.mins||0,e.cals||0,e.laps||0,e.time||'']);
+      cardioRows.push([e.date,day,e.type||'',e.intensity||'',e.mins||0,e.seconds||0,e.cals||0,e.laps||0,e.time||'']);
     });
     await put('Cardio Log', cardioRows);
 
+    // ── 8. WEIGHT LOG ─────────────────────────────────────────────────────────
     const wtRows = [['Date','Day','Weight (lbs)','Notes']];
     (state.weightLog||[]).forEach(w => {
       const day = new Date(w.date+'T12:00:00').toLocaleDateString('en-US',{weekday:'long'});
@@ -2817,27 +3115,124 @@ async function syncToSheets() {
     });
     await put('Weight Log', wtRows);
 
-    const recRows = [['Recipe Name','Category','Ingredient','Servings','Cal/Srv','Protein/Srv','Carbs/Srv','Fat/Srv','Total Cal','Total Protein','Total Carbs','Total Fat']];
+    // ── 9. STEP LOG ───────────────────────────────────────────────────────────
+    const stepRows = [['Date','Day','Steps']];
+    Object.entries(state.stepLog||{}).sort().forEach(([date, steps]) => {
+      const day = new Date(date+'T12:00:00').toLocaleDateString('en-US',{weekday:'long'});
+      stepRows.push([date, day, steps||0]);
+    });
+    await put('Step Log', stepRows);
+
+    // ── 10. RECIPES ───────────────────────────────────────────────────────────
+    const recRows = [['Recipe Name','Category','Notes','Ingredient','Servings',
+      'Cal/Srv','Protein/Srv (g)','Carbs/Srv (g)','Fat/Srv (g)',
+      'Total Cal','Total Protein (g)','Total Carbs (g)','Total Fat (g)']];
     (state.recipes||[]).forEach(r => {
-      if (!(r.ingredients||[]).length) { recRows.push([r.name,r.category||'','','','','','','','','','','']); return; }
-      r.ingredients.forEach(ing => {
+      if (!(r.ingredients||[]).length) {
+        recRows.push([r.name,r.category||'',r.notes||'','','','','','','','','','','']); return;
+      }
+      r.ingredients.forEach((ing, i) => {
         const sv = ing.servings||1;
-        recRows.push([r.name,r.category||'',ing.name,sv,ing.cal||0,ing.protein||0,ing.carbs||0,ing.fat||0,(ing.cal||0)*sv,(ing.protein||0)*sv,(ing.carbs||0)*sv,(ing.fat||0)*sv]);
+        recRows.push([
+          i===0?r.name:'', i===0?r.category||'':'', i===0?r.notes||'':'',
+          ing.name, sv,
+          ing.cal||0, ing.protein||0, ing.carbs||0, ing.fat||0,
+          (ing.cal||0)*sv, (ing.protein||0)*sv, (ing.carbs||0)*sv, (ing.fat||0)*sv
+        ]);
       });
     });
     await put('Recipes', recRows);
 
-    const sfRows = [['Food Name','Saved Date','Calories','Protein (g)','Carbs (g)','Fat (g)','Fiber (g)','Sugar (g)','Sodium (mg)','Calcium (mg)','Iron (mg)','Potassium (mg)']];
-    (state.savedFoods||[]).forEach(f => sfRows.push([f.name,f.savedAt||'',f.cal||0,f.protein||0,f.carbs||0,f.fat||0,f.fiber||0,f.sugar||0,f.sodium||0,f.calcium||0,f.iron||0,f.potassium||0]));
+    // ── 11. SAVED FOODS ───────────────────────────────────────────────────────
+    const sfRows = [['Food Name','Saved Date','Calories','Protein (g)','Carbs (g)','Fat (g)',
+      'Fiber (g)','Sugar (g)','Sodium (mg)','Calcium (mg)','Iron (mg)','Potassium (mg)',
+      'Vitamin C (mg)','Vitamin D (IU)','Cholesterol (mg)','Sat Fat (g)']];
+    (state.savedFoods||[]).forEach(f => sfRows.push([
+      f.name, f.savedAt||'',
+      f.cal||0, f.protein||0, f.carbs||0, f.fat||0,
+      f.fiber||0, f.sugar||0, f.sodium||0, f.calcium||0, f.iron||0, f.potassium||0,
+      f.vitc||0, f.vitd||0, f.chol||0, f.satfat||0
+    ]));
     await put('Saved Foods', sfRows);
 
-    const upRows = [['Date Updated','Name','Email']];
-    if (typeof gUser !== 'undefined' && gUser) upRows.push([today(),gUser.name,gUser.email]);
-    else upRows.push([today(),'Guest','']);
+    // ── 12. MEAL TEMPLATES ────────────────────────────────────────────────────
+    const tmplRows = [['Template Name','Saved From Date','Total Calories','Item Count',
+      'Food Name','Calories','Protein (g)','Carbs (g)','Fat (g)']];
+    (state.mealTemplates||[]).forEach(t => {
+      if (!(t.foods||[]).length) {
+        tmplRows.push([t.name, t.savedAt||'', t.totalCal||0, 0, '','','','','']); return;
+      }
+      t.foods.forEach((f, i) => {
+        tmplRows.push([
+          i===0?t.name:'', i===0?t.savedAt||'':'',
+          i===0?Math.round(t.totalCal||0):'', i===0?t.foods.length:'',
+          f.name, f.cal||0, f.protein||0, f.carbs||0, f.fat||0
+        ]);
+      });
+    });
+    await put('Meal Templates', tmplRows);
+
+    // ── 13. STREAK LOG ────────────────────────────────────────────────────────
+    const streakRows = [['Date','Day','Had Food Log','Had Workout','Had Cardio','Steps','Streak Count']];
+    const allDates = new Set([
+      ...Object.keys(state.foodLog||{}),
+      ...Object.keys(state.workoutLog||{}),
+      ...Object.keys(state.stepLog||{}),
+      ...(state.cardioLog||[]).map(e=>e.date)
+    ]);
+    let runningStreak = 0, prevDate = null;
+    Array.from(allDates).sort().forEach(ds => {
+      const hasFoods   = (state.foodLog[ds]||[]).length > 0;
+      const hasWorkout = !!(state.workoutLog[ds] && (state.workoutLog[ds].exercises||[]).length > 0);
+      const hasCardio  = (state.cardioLog||[]).some(e => e.date === ds);
+      const steps      = state.stepLog?.[ds] || 0;
+      if (!hasFoods && !hasWorkout && !hasCardio && !steps) return;
+      const day = new Date(ds+'T12:00:00').toLocaleDateString('en-US',{weekday:'long'});
+      if (prevDate) {
+        const diff = Math.round((new Date(ds+'T12:00:00') - new Date(prevDate+'T12:00:00')) / 86400000);
+        runningStreak = diff === 1 ? runningStreak + 1 : 1;
+      } else { runningStreak = 1; }
+      streakRows.push([ds, day, hasFoods?'Yes':'No', hasWorkout?'Yes':'No', hasCardio?'Yes':'No', steps, runningStreak]);
+      prevDate = ds;
+    });
+    await put('Streak Log', streakRows);
+
+    // ── 14. USER PROFILE ─────────────────────────────────────────────────────
+    const upRows = [['Date Updated','Name','Email','Theme']];
+    const uName = (typeof gUser !== 'undefined' && gUser) ? gUser.name : 'Guest';
+    const uEmail = (typeof gUser !== 'undefined' && gUser) ? gUser.email : '';
+    upRows.push([today(), uName, uEmail, state.theme||'blue']);
     await put('User Profile', upRows);
 
-    const total = [foodRows,drinkRows,wktRows,cardioRows,wtRows,recRows,sfRows].reduce((s,a)=>s+a.length,0)-7;
-    document.getElementById('sheets-status').textContent = `Synced ${total} rows across 10 tabs \u2014 ${new Date().toLocaleTimeString()}`;
+    // ── 15. APP SETTINGS ─────────────────────────────────────────────────────
+    const g2 = state.goals||{};
+    const dg2 = state.drinkGoals||{};
+    const appRows = [
+      ['Setting','Value'],
+      ['Calorie Goal',       g2.calories||0],
+      ['Protein Goal (g)',   g2.protein||0],
+      ['Carbs Goal (g)',     g2.carbs||0],
+      ['Fat Goal (g)',       g2.fat||0],
+      ['Water Goal (oz)',    dg2.water||64],
+      ['Caffeine Limit (mg)',dg2.caffeine||400],
+      ['Color Theme',        state.theme||'blue'],
+      ['Sheet ID',           state.sheets?.id||''],
+      ['App Version',        'v3.0'],
+      ['Last Synced',        new Date().toLocaleString()],
+      ['Total Food Entries', Object.values(state.foodLog||{}).reduce((s,a)=>s+a.length,0)],
+      ['Total Workout Days', Object.keys(state.workoutLog||{}).length],
+      ['Total Weight Logs',  (state.weightLog||[]).length],
+      ['Total Cardio Logs',  (state.cardioLog||[]).length],
+      ['Total Recipes',      (state.recipes||[]).length],
+      ['Total Saved Foods',  (state.savedFoods||[]).length],
+      ['Total Meal Templates',(state.mealTemplates||[]).length],
+      ['Current Streak (days)', calcStreak()],
+    ];
+    await put('App Settings', appRows);
+
+    const allTabs = [foodRows,prewktRows,drinkRows,wktRows,splitRows,cardioRows,wtRows,stepRows,recRows,sfRows,tmplRows,streakRows,appRows];
+    const total = allTabs.reduce((s,a) => s + a.length, 0) - allTabs.length;
+    document.getElementById('sheets-status').textContent = `Synced ${total} rows across 15 tabs \u2014 ${new Date().toLocaleTimeString()}`;
     showToast('Synced to Google Sheets.','success');
   } catch(e) {
     document.getElementById('sheets-status').textContent = 'Error: ' + e.message;
@@ -3621,6 +4016,7 @@ function refreshRecipes() {
   document.getElementById('recipe-search').value = '';
   document.querySelectorAll('#recipe-filter-chips .chip').forEach((c,i) => c.classList.toggle('active', i===0));
   renderRecipeBook();
+  renderTemplateList();
 }
 
 function renderRecipeBook() {
@@ -3937,54 +4333,44 @@ function logRecipeToday() {
   showToast(r.name + ' logged to today.', 'success');
 }
 function getSheetScript() {
-  return `// NOGTRITION — Google Sheets Setup Script
-// Paste this into Extensions > Apps Script in a blank Google Sheet, then click Run.
-// It will create all tabs with the correct headers automatically.
+  return `// NOGTRITION — Google Sheets Full Setup Script
+// Paste into Extensions > Apps Script in a blank Google Sheet, then click Run.
+// Creates all 15 tabs with correct headers for every piece of data in the app.
 
 function setupNogtritionSheet() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var food = ss.getSheetByName('Food Log') || ss.insertSheet('Food Log');
-  food.clearContents();
-  food.getRange(1,1,1,14).setValues([[
-    'Date','Meal','Food Name','Calories','Protein (g)','Carbs (g)','Fat (g)',
-    'Sodium (mg)','Fiber (g)','Sugar (g)','Calcium (mg)','Iron (mg)','Potassium (mg)','Time'
-  ]]);
-  food.getRange(1,1,1,14).setFontWeight('bold').setBackground('#1a1a2e').setFontColor('#3b9eff');
-  food.setFrozenRows(1);
-  var wkt = ss.getSheetByName('Workout Log') || ss.insertSheet('Workout Log');
-  wkt.clearContents();
-  wkt.getRange(1,1,1,12).setValues([[
-    'Date','Split','Workout','Exercise','Muscle Group','Set #','Weight (lbs)','Reps',
-    'Set Type','RIR','Notes','Time'
-  ]]);
-  wkt.getRange(1,1,1,12).setFontWeight('bold').setBackground('#1a1a2e').setFontColor('#3b9eff');
-  wkt.setFrozenRows(1);
-  var wt = ss.getSheetByName('Weight Log') || ss.insertSheet('Weight Log');
-  wt.clearContents();
-  wt.getRange(1,1,1,3).setValues([['Date','Weight (lbs)','Notes']]);
-  wt.getRange(1,1,1,3).setFontWeight('bold').setBackground('#1a1a2e').setFontColor('#3b9eff');
-  wt.setFrozenRows(1);
-  var goals = ss.getSheetByName('Goals') || ss.insertSheet('Goals');
-  goals.clearContents();
-  goals.getRange(1,1,1,5).setValues([['Calorie Goal','Protein Goal (g)','Carb Goal (g)','Fat Goal (g)','Last Updated']]);
-  goals.getRange(1,1,1,5).setFontWeight('bold').setBackground('#1a1a2e').setFontColor('#3b9eff');
-  goals.setFrozenRows(1);
-  var splits = ss.getSheetByName('Splits') || ss.insertSheet('Splits');
-  splits.clearContents();
-  splits.getRange(1,1,1,6).setValues([['Split Name','Split Desc','Workout Name','Workout Focus','Exercise','Muscle Group']]);
-  splits.getRange(1,1,1,6).setFontWeight('bold').setBackground('#1a1a2e').setFontColor('#3b9eff');
-  splits.setFrozenRows(1);
-  var rec = ss.getSheetByName('Recipes') || ss.insertSheet('Recipes');
-  rec.clearContents();
-  rec.getRange(1,1,1,8).setValues([['Recipe Name','Category','Ingredient','Servings','Calories','Protein (g)','Carbs (g)','Fat (g)']]);
-  rec.getRange(1,1,1,8).setFontWeight('bold').setBackground('#1a1a2e').setFontColor('#3b9eff');
-  rec.setFrozenRows(1);
-
-  // Remove default "Sheet1" if it exists and is empty
-  var sheet1 = ss.getSheetByName('Sheet1');
-  if (sheet1 && sheet1.getLastRow() === 0) ss.deleteSheet(sheet1);
-
-  SpreadsheetApp.getUi().alert(' NOGTRITION sheet setup complete! You now have 6 tabs ready. Copy the Sheet ID from the URL and paste it into the app Settings.');
+  function makeSheet(name, headers, tabColor) {
+    var s = ss.getSheetByName(name) || ss.insertSheet(name);
+    s.clearContents(); s.clearFormats();
+    s.getRange(1,1,1,headers.length).setValues([headers])
+      .setBackground('#0d0d0d').setFontColor('#3b9eff')
+      .setFontWeight('bold').setFontSize(10);
+    s.setFrozenRows(1);
+    s.setTabColor(tabColor || '#3b9eff');
+    s.autoResizeColumns(1, headers.length);
+    return s;
+  }
+  makeSheet('Food Log',['Date','Day','Meal','Food Name','Calories','Protein (g)','Carbs (g)','Fat (g)','Fiber (g)','Sugar (g)','Sodium (mg)','Potassium (mg)','Calcium (mg)','Iron (mg)','Vitamin C (mg)','Vitamin D (IU)','Cholesterol (mg)','Sat Fat (g)','Carb Type','Pre-Workout','Time'],'#1a4a7a');
+  makeSheet('Pre-Workout Nutrition',['Date','Day','Food Name','Calories','Protein (g)','Carbs (g)','Fat (g)','Fiber (g)','Sugar (g)','Carb Type','Time'],'#7a3a1a');
+  makeSheet('Drink Log',['Date','Day','Type','Label','Amount','Unit','Time'],'#1a5a7a');
+  makeSheet('Nutrition Goals',['Date Updated','Calorie Goal','Protein (g)','Carbs (g)','Fat (g)','Water Goal (oz)','Caffeine Limit (mg)'],'#2a6a2a');
+  makeSheet('Workout Log',['Date','Day','Split','Workout','Exercise','Muscle Group','Superset','Set #','Set Type','Weight (lbs)','Reps','Volume (lbs)','RIR','Assisted Reps','Drop Weight (lbs)','Drop Reps','Notes','Time'],'#4a1a7a');
+  makeSheet('Splits',['Split Name','Split Description','Workout Name','Workout Focus','Exercise','Muscle Group','Target Sets','Target Reps','Superset'],'#5a1a5a');
+  makeSheet('Cardio Log',['Date','Day','Activity','Intensity','Duration (min)','Duration (sec)','Est. Calories','Laps','Time of Day'],'#7a1a1a');
+  makeSheet('Weight Log',['Date','Day','Weight (lbs)','Notes'],'#1a7a4a');
+  makeSheet('Step Log',['Date','Day','Steps'],'#1a7a7a');
+  makeSheet('Recipes',['Recipe Name','Category','Notes','Ingredient','Servings','Cal/Srv','Protein/Srv (g)','Carbs/Srv (g)','Fat/Srv (g)','Total Cal','Total Protein (g)','Total Carbs (g)','Total Fat (g)'],'#7a6a1a');
+  makeSheet('Saved Foods',['Food Name','Saved Date','Calories','Protein (g)','Carbs (g)','Fat (g)','Fiber (g)','Sugar (g)','Sodium (mg)','Calcium (mg)','Iron (mg)','Potassium (mg)','Vitamin C (mg)','Vitamin D (IU)','Cholesterol (mg)','Sat Fat (g)'],'#7a7a1a');
+  makeSheet('Meal Templates',['Template Name','Saved From Date','Total Calories','Item Count','Food Name','Calories','Protein (g)','Carbs (g)','Fat (g)'],'#3a7a1a');
+  makeSheet('Streak Log',['Date','Day','Had Food Log','Had Workout','Had Cardio','Steps','Streak Count'],'#7a3a3a');
+  makeSheet('User Profile',['Date Updated','Name','Email','Theme'],'#3a3a3a');
+  makeSheet('App Settings',['Setting','Value'],'#1a3a5a');
+  var order = ['Food Log','Pre-Workout Nutrition','Drink Log','Nutrition Goals','Workout Log','Splits','Cardio Log','Weight Log','Step Log','Recipes','Saved Foods','Meal Templates','Streak Log','User Profile','App Settings'];
+  order.forEach(function(name,i){ var s=ss.getSheetByName(name); if(s){ss.setActiveSheet(s);ss.moveActiveSheet(i+1);} });
+  var s1 = ss.getSheetByName('Sheet1');
+  if (s1 && ss.getSheets().length > 15) ss.deleteSheet(s1);
+  var id = ss.getId();
+  SpreadsheetApp.getUi().alert('NOGTRITION Setup Complete!\\n\\n15 tabs created.\\n\\nYour Sheet ID (paste into app Settings):\\n' + id);
 }`;
 }
 
@@ -4601,11 +4987,130 @@ function runMacroConv() {
   document.getElementById('conv-fat-cal').textContent     = fCal + ' kcal';
   document.getElementById('conv-total-cal').textContent   = (pCal + cCal + fCal) + ' kcal';
 }
-// Hide app shell until auth is determined
+// ── BOOT ─────────────────────────────────────────────────────────────────────
 document.getElementById('app').style.display = 'none';
 applyTheme(state.theme || 'blue');
 refreshDashboard();
 bootAuth();
+
+// Warn if feedback form URL hasn't been replaced
+(function() {
+  const link = document.getElementById('feedback-form-link');
+  if (link && link.getAttribute('href') === 'FEEDBACK_FORM_URL_HERE') {
+    console.warn('[NOGTRITION] Feedback form URL not set. Run NOGTRITION_Feedback_Setup.gs and replace FEEDBACK_FORM_URL_HERE in the HTML.');
+    link.href = '#';
+    link.onclick = function(e) {
+      e.preventDefault();
+      showToast('Feedback form not configured yet.', 'error');
+    };
+  }
+})();
+
+// ── PWA MANIFEST ─────────────────────────────────────────────────────────────
+(function() {
+  const manifest = {
+    name: 'NOGTRITION',
+    short_name: 'NOGTRITION',
+    description: 'Bodybuilder nutrition & workout tracking app',
+    start_url: '/',
+    display: 'standalone',
+    orientation: 'portrait',
+    background_color: '#000000',
+    theme_color: '#000000',
+    categories: ['health', 'fitness'],
+    icons: [
+      { src: 'icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any maskable' },
+      { src: 'icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
+    ],
+    shortcuts: [
+      { name: 'Log Food', short_name: 'Food', url: '/?tab=nutrition', icons: [{ src: 'icons/icon-192.png', sizes: '192x192' }] },
+      { name: 'Log Workout', short_name: 'Workout', url: '/?tab=workout', icons: [{ src: 'icons/icon-192.png', sizes: '192x192' }] }
+    ]
+  };
+  const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const el   = document.getElementById('pwa-manifest');
+  if (el) el.href = url;
+})();
+
+// ── SERVICE WORKER ────────────────────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  const SW_VERSION = 'nogtrition-v3';
+  const CACHE_URLS = [
+    '/',
+    'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap',
+    'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js'
+  ];
+  const swCode = `
+const CACHE = '${SW_VERSION}';
+const PRECACHE = ${JSON.stringify(CACHE_URLS)};
+
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open(CACHE).then(c => c.addAll(PRECACHE).catch(() => {})).then(() => self.skipWaiting())
+  );
+});
+
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys().then(keys => Promise.all(
+      keys.filter(k => k !== CACHE).map(k => caches.delete(k))
+    )).then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener('fetch', e => {
+  const url = new URL(e.request.url);
+  // Network-first for API calls (food search, sheets sync, google auth)
+  if (url.hostname.includes('openfoodfacts') ||
+      url.hostname.includes('googleapis') ||
+      url.hostname.includes('accounts.google')) {
+    e.respondWith(
+      fetch(e.request).catch(() => caches.match(e.request))
+    );
+    return;
+  }
+  // Cache-first for fonts and static assets
+  e.respondWith(
+    caches.match(e.request).then(cached => cached || fetch(e.request).then(res => {
+      if (res && res.status === 200 && e.request.method === 'GET') {
+        const clone = res.clone();
+        caches.open(CACHE).then(c => c.put(e.request, clone));
+      }
+      return res;
+    }))
+  );
+});
+  `;
+  const swBlob = new Blob([swCode], { type: 'application/javascript' });
+  const swUrl  = URL.createObjectURL(swBlob);
+  navigator.serviceWorker.register(swUrl, { scope: '/' })
+    .then(() => console.log('[NOGTRITION] Service worker registered.'))
+    .catch(e => console.warn('[NOGTRITION] SW registration failed (expected on file://): ', e.message));
+}
+
+// ── ERROR BOUNDARY ────────────────────────────────────────────────────────────
+window.addEventListener('error', function(e) {
+  // Only show recovery UI for critical render errors, not minor script issues
+  if (e.error && (e.error.name === 'TypeError' || e.error.name === 'SyntaxError')) {
+    const body = document.body;
+    if (body && !document.getElementById('error-boundary')) {
+      body.innerHTML = `
+        <div id="error-boundary" style="min-height:100vh;background:#000;display:flex;align-items:center;justify-content:center;padding:32px;font-family:sans-serif;color:#fff;text-align:center">
+          <div style="max-width:360px">
+            <div style="font-size:48px;letter-spacing:4px;color:#3b9eff;margin-bottom:12px;font-weight:900">NOGTRITION</div>
+            <div style="font-size:18px;font-weight:600;margin-bottom:8px">Something went wrong</div>
+            <div style="font-size:13px;color:#6b7a8d;line-height:1.6;margin-bottom:28px">The app ran into a problem loading your data. Your data is safe — tap below to reload or export a backup before clearing.</div>
+            <button onclick="location.reload()" style="width:100%;padding:14px;border-radius:12px;background:#3b9eff;color:#fff;border:none;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:12px">Reload App</button>
+            <button onclick="(function(){try{const d=localStorage.getItem('nogtrition_v2');if(d){const a=document.createElement('a');a.href='data:application/json,'+encodeURIComponent(d);a.download='nogtrition-recovery-'+new Date().toISOString().slice(0,10)+'.json';a.click();}else{alert('No data found.');}}catch(e){alert('Could not export: '+e.message);}})()" style="width:100%;padding:14px;border-radius:12px;background:transparent;color:#6b7a8d;border:1px solid #1e2a3a;font-size:15px;font-weight:500;cursor:pointer;margin-bottom:12px">Export Data Backup</button>
+            <button onclick="if(confirm('This will clear all app data. Make sure you exported a backup first.')){localStorage.clear();location.reload();}" style="width:100%;padding:12px;border-radius:12px;background:transparent;color:#ff4747;border:1px solid #ff474730;font-size:13px;cursor:pointer">Clear Data & Reset</button>
+            <div style="font-size:11px;color:#3b3b3b;margin-top:20px">${e.error?.message || 'Unknown error'}</div>
+          </div>
+        </div>`;
+    }
+  }
+});
+
 </script>
 </body>
 </html>
